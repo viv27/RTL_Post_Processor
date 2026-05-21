@@ -12,7 +12,10 @@ wire [3:0] status;
 reg flag;
 // Register WITHOUT clock gating — your tool should fix this
 always @(posedge clk) begin
-    reg_ungated <= data_in;
+    if (enable) begin
+        reg_ungated <= data_in;
+    end
+
 end
 
 // Register WITH clock gating — your tool should leave this alone

@@ -43,13 +43,38 @@ def parse_verilog(content):
         "signals": extract_signals(content)
     }
 
+def insert_clock_gating(content):
+    assignments = re.findall(r"\s+\w+\s*<=\s*\w+;", content)
+    print(assignments)
+
+
 if __name__ == "__main__":
     content = read_verilog("sample.v")
     ungated, gated = detect_ungated_registers(content)
-    print(f"Ungated registers: {ungated}")
-    print(f"Gated registers: {gated}")
+    #print(f"Ungated registers: {ungated}")
+    #print(f"Gated registers: {gated}")
 
-    print(parse_verilog(content))
+    parts = re.split(r"(always\s*@\s*\(\s*posedge\s+clk\s*\))", content)
+    for i, part in enumerate(parts):
+        print(f"--- Part {i} ---")
+        
+        if re.match(r"always\s*@\s*\(\s*posedge\s+clk\s*\)", part):
+            block_body = parts[i+1]
+            if "if" not in block_body.split("end")[0]:
+                print(f"Block body (Part {i+1}): UNGATED — needs fixing")
+                assignment = re.search(r"\s+\w+\s*<=\s*[\w\s]+;", block_body)
+                if assignment:
+                    original = assignment.group(0)
+                    gated = "\n    if (enable) begin\n        " + original.strip() + "\n    end\n"
+                    print("Original:", repr(original))
+                    print("Gated:", repr(gated))
+                    modified_content = content.replace(original, gated)
+            else:
+                print(f"Block body (Part {i+1}): GATED — leave alone")
+
+    with open("sample_gated.v", "w") as f:
+        f.write(modified_content)
+        print("Written to sample_gated.v")
 
 
 
