@@ -11,11 +11,10 @@ reg [7:0] internal_counter;
 wire [3:0] status;
 reg flag;
 // Register WITHOUT clock gating — your tool should fix this
-always @(posedge clk) begin
-    if (enable) begin
-        reg_ungated <= data_in;
-    end
+clock_gate cg1(.clk(clk), .enable(enable), .gated_clk(gated_clk1));
 
+always @(posedge gated_clk1) begin
+    reg_ungated <= data_in;
 end
 
 // Register WITH clock gating — your tool should leave this alone

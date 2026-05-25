@@ -1,0 +1,25 @@
+{
+  "module_name": "complex_sample",
+  "ports": [
+    "input clk",
+    "input reset",
+    "input [7:0] data_in",
+    "input [7:0] data_in2",
+    "input enable",
+    "output reg [7:0] reg_a",
+    "output reg [7:0] reg_b",
+    "output reg [7:0] reg_c"
+  ],
+  "signals": [
+    "reg [7:0] reg_a",
+    "reg [7:0] reg_b",
+    "reg [7:0] reg_c"
+  ],
+  "ungated_registers": [
+    1,
+    2
+  ],
+  "gated_registers": [
+    3
+  ]
+}

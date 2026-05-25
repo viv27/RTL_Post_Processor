@@ -1,0 +1,77 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "C:\iverilog\lib\ivl\system.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "C:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "C:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "C:\iverilog\lib\ivl\va_math.vpi";
+S_0000027163db6680 .scope module, "sample" "sample" 2 1;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 1 "reset";
+    .port_info 2 /INPUT 8 "data_in";
+    .port_info 3 /INPUT 1 "enable";
+    .port_info 4 /OUTPUT 8 "reg_ungated";
+    .port_info 5 /OUTPUT 8 "reg_gated";
+o0000027163db6fd8 .functor BUFZ 1, C4<z>; HiZ drive
+v0000027163cfa1c0_0 .net "clk", 0 0, o0000027163db6fd8;  0 drivers
+o0000027163db7128 .functor BUFZ 8, C4<zzzzzzzz>; HiZ drive
+v0000027163db69a0_0 .net "data_in", 7 0, o0000027163db7128;  0 drivers
+o0000027163db7008 .functor BUFZ 1, C4<z>; HiZ drive
+v0000027163db6a40_0 .net "enable", 0 0, o0000027163db7008;  0 drivers
+v0000027163cfb880_0 .net "gated_clk", 0 0, L_0000027163db6ae0;  1 drivers
+v0000027163cfb920_0 .var "reg_gated", 7 0;
+v0000027163cfb9c0_0 .var "reg_ungated", 7 0;
+o0000027163db71b8 .functor BUFZ 1, C4<z>; HiZ drive
+v0000027163cfba60_0 .net "reset", 0 0, o0000027163db71b8;  0 drivers
+E_0000027163cfbef0 .event posedge, v0000027163d83490_0;
+E_0000027163cfc6b0 .event posedge, v0000027163cf88a0_0;
+S_0000027163db6810 .scope module, "cg1" "clock_gate" 2 14, 3 1 0, S_0000027163db6680;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 1 "enable";
+    .port_info 2 /OUTPUT 1 "gated_clk";
+L_0000027163db6ae0 .functor AND 1, o0000027163db6fd8, v0000027163cf8ef0_0, C4<1>, C4<1>;
+v0000027163d83490_0 .net "clk", 0 0, o0000027163db6fd8;  alias, 0 drivers
+v0000027163d830a0_0 .net "enable", 0 0, o0000027163db7008;  alias, 0 drivers
+v0000027163cf8ef0_0 .var "enable_latched", 0 0;
+v0000027163cf88a0_0 .net "gated_clk", 0 0, L_0000027163db6ae0;  alias, 1 drivers
+E_0000027163cfcbb0 .event anyedge, v0000027163d830a0_0, v0000027163d83490_0;
+    .scope S_0000027163db6810;
+T_0 ;
+    %wait E_0000027163cfcbb0;
+    %load/vec4 v0000027163d83490_0;
+    %nor/r;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_0.0, 8;
+    %load/vec4 v0000027163d830a0_0;
+    %assign/vec4 v0000027163cf8ef0_0, 0;
+T_0.0 ;
+    %jmp T_0;
+    .thread T_0, $push;
+    .scope S_0000027163db6680;
+T_1 ;
+    %wait E_0000027163cfc6b0;
+    %load/vec4 v0000027163db69a0_0;
+    %assign/vec4 v0000027163cfb9c0_0, 0;
+    %jmp T_1;
+    .thread T_1;
+    .scope S_0000027163db6680;
+T_2 ;
+    %wait E_0000027163cfbef0;
+    %load/vec4 v0000027163db6a40_0;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_2.0, 8;
+    %load/vec4 v0000027163db69a0_0;
+    %assign/vec4 v0000027163cfb920_0, 0;
+T_2.0 ;
+    %jmp T_2;
+    .thread T_2;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "sample_gated.v";
+    "clock_gate.v";
